@@ -12,13 +12,13 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
-
 app.get('/api/students', async (req, res) => {
+    try {
     const students = await Student.find();
     res.json(students);
+} catch (error) {
+    res.status(500).json({ message: 'Error fetching students'});
+}
 });
 
 app.get('/api/students/:id', async (req, res) => {
