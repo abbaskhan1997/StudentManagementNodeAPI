@@ -1,16 +1,23 @@
 const express = require('express');
-const Student = require('./models/Student');
+const cors = require('cors');
+const Student = require('./models/student');
+const authRoutes = require('./routes/auth');
+const authMiddleware = require('./middleware/authMiddleware');
 
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());  // JSON request read middleware
+app.use('/api/auth', authRoutes);
+app.use(authMiddleware);  // Apply auth middleware to all routes below
 
 const port = 3000;
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+    
+
 
 app.get('/api/students', async (req, res) => {
     try {
@@ -53,7 +60,7 @@ app.put('/api/students/:id', async (req, res) => {
     }
 });
 
-app.post('/api/students', async (req, res) => {
+app.post('/api/students', authMiddleware, async (req, res) => {
     try {
     const student = new Student(req.body);
 
