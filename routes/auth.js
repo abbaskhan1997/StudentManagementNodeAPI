@@ -42,7 +42,8 @@ router.post('/login', async (req, res) => {
   if (!isMatch) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
-
+ 
+  // jsonwebtoken
   const token = jwt.sign(
     { userId: user._id },
     'secretkey',

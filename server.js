@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());  // JSON request read middleware
 app.use('/api/auth', authRoutes);
-app.use(authMiddleware);  // Apply auth middleware to all routes below
+// app.use(authMiddleware);  // Apply auth middleware to all routes below
 
 const port = 3000;
 
@@ -19,8 +19,9 @@ app.listen(port, () => {
     
 
 
-app.get('/api/students', async (req, res) => {
+app.get('/api/students', authMiddleware, async (req, res) => {
     try {
+         console.log(req.user.userId);
     const students = await Student.find();
     res.json(students);
 } catch (error) {
@@ -28,7 +29,7 @@ app.get('/api/students', async (req, res) => {
 }
 });
 
-app.get('/api/students/:id', async (req, res) => {
+app.get('/api/students/:id', authMiddleware, async (req, res) => {
     try {
     const student = await Student.findById(req.params.id);
 
@@ -42,7 +43,7 @@ app.get('/api/students/:id', async (req, res) => {
 }
 });
 
-app.put('/api/students/:id', async (req, res) => {
+app.put('/api/students/:id', authMiddleware, async (req, res) => {
     try {
         const student = await Student.findByIdAndUpdate(
             req.params.id,
@@ -74,7 +75,7 @@ app.post('/api/students', authMiddleware, async (req, res) => {
 
 
 
-app.delete('/api/students/:id', async (req, res) => {
+app.delete('/api/students/:id', authMiddleware, async (req, res) => {
     try {
     const student = await Student.findByIdAndDelete(req.params.id);
 
