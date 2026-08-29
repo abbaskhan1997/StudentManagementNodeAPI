@@ -20,13 +20,18 @@ app.listen(port, () => {
 
 
 app.get('/api/students', authMiddleware, async (req, res) => {
-    try {
-         console.log(req.user.userId);
-    const students = await Student.find();
+  try {
+    const students = await Student.find({
+      userId: req.user.userId
+    });
+
     res.json(students);
-} catch (error) {
-    res.status(500).json({ message: 'Error fetching students'});
-}
+
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error fetching students'
+    });
+  }
 });
 
 app.get('/api/students/:id', authMiddleware, async (req, res) => {
@@ -63,7 +68,7 @@ app.put('/api/students/:id', authMiddleware, async (req, res) => {
 
 app.post('/api/students', authMiddleware, async (req, res) => {
     try {
-    const student = new Student(req.body);
+    const student = new Student({ userId: req.user.userId, ...req.body });
 
     await student.save();
 

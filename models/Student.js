@@ -6,7 +6,13 @@ const studentSchema = new mongoose.Schema({
     phone: String,
     age: Number,
     course: String,
-    gender: String
+    gender: String,
+
+    userId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: 'User',
+  required: true
+}
   });
 
   module.exports = mongoose.model('Student', studentSchema);
